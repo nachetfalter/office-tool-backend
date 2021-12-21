@@ -49,6 +49,7 @@ module.exports = {
     ],
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/quotes': [
       'error',
       'single',

@@ -105,3 +105,6 @@ dist
 
 # Parcel cache
 .parcel-cache
+
+# File uploads
+uploads/

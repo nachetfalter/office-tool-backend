@@ -15,6 +15,7 @@ app.post('/pdf/split', fileMiddleware, async (req: Request, res: Response) => {
   if (req.file) {
     const buffer = readFileSync(req.file.path) as Buffer;
     const fileName = req.file.originalname.replace('.pdf', '');
+    console.log(`Entering split function with filename ${fileName}`);
     const resultFilePath = await splitPdf(fileName, buffer, req.body.pageName, JSON.parse(req.body.pageOptions));
     fs.unlink(req.file.path, (err) => {
       if (err) {
@@ -37,5 +38,4 @@ app.get('/test', async (req: Request, res: Response) => {
 });
 
 export const handler = serverless(app);
-
 export default app;

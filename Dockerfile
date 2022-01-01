@@ -1,11 +1,17 @@
-FROM node:16.13.0
-
-WORKDIR /usr/src/app
+FROM public.ecr.aws/lambda/nodejs:12
 
 COPY . .
 
 EXPOSE 8000
 
+RUN apt-get update && apt-get install -y \
+  ghostscript \
+  libgs-dev \
+  imagemagick
+
 RUN yarn
 
-CMD ["yarn", "watch"]
+RUN yarn build
+EXPOSE 8000
+
+CMD ["dist/app.handler"]

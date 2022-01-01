@@ -1,18 +1,20 @@
 org: nachetfalter
-app: office-tool
-service: office-tool
+app: office-tool-backend
+service: office-tool-backend
+
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: ap-southeast-2
-  memorySize: 128
+  memorySize: 7168
 custom:
   serverless-offline:
     httpPort: 8000
   noPrependStageInUrl: true
+
 functions:
-  app:
+  backend:
     handler: dist/app.handler
     events:
       - http:
@@ -27,6 +29,9 @@ functions:
           path: /{proxy+}
           method: ANY
           cors: true
+    layers:
+      - arn:aws:lambda:ap-southeast-2:175033217214:layer:graphicsmagick:2
+      - arn:aws:lambda:ap-southeast-2:764866452798:layer:ghostscript:9
 
 plugins:
   - serverless-offline

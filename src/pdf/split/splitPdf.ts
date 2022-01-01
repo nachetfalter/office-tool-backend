@@ -15,12 +15,14 @@ const writeImageToFile = async (
   image: any,
   pageCounter: number,
 ): Promise<number> => {
+  console.log(`Writing image to file`);
   await image.writeAsync(`${filePath}/${pageName}-${pageCounter}.png`);
   pageCounter += 1;
   return pageCounter;
 };
 
 export const convertPdfToImage = async (fileBuffer: Buffer, savePath: string, pageName: string): Promise<void> => {
+  console.log('Converting pdf to image');
   const pdfDoc = await PDFDocument.load(fileBuffer);
   const pages = pdfDoc.getPages();
   const { width, height } = getSizeAdjustedForRotation(pages[0]);
@@ -32,7 +34,10 @@ export const convertPdfToImage = async (fileBuffer: Buffer, savePath: string, pa
     density: 600,
     saveFilename: pageName,
   };
+
   const convert = fromBuffer(fileBuffer, baseOptions);
+
+  console.log('can start the convert function');
 
   if (convert) {
     await Promise.all(
@@ -42,6 +47,7 @@ export const convertPdfToImage = async (fileBuffer: Buffer, savePath: string, pa
         if (convert.bulk !== undefined) {
           await convert.bulk(pageNumber + 1);
         }
+        console.log('can finish the convert function');
       }),
     );
   } else {
@@ -55,6 +61,7 @@ export const subSplitPage = async (
   pageName: string,
   splitOption: 'vertical' | 'horizontal',
 ): Promise<void> => {
+  console.log('Conducting sub split');
   const files = fs.readdirSync(originalFilePath);
   let pageCounter = 1;
   for (const file of files) {
@@ -84,15 +91,16 @@ export const subSplitPage = async (
 };
 
 export const splitPdf = async (fileName: string, fileBuffer: Buffer, pageName: string, pageOptions: PageOptions) => {
+  console.log(`Entered split pdf function`);
   const jobId = uuid();
-  const originalFilePath = path.resolve(__dirname, `../../../uploads/pdf/split/${jobId}/original`);
-  const resultZiptPath = path.resolve(__dirname, `../../../uploads/pdf/split/${jobId}`);
+  const originalFilePath = path.resolve(__dirname, `/tmp/pdf/split/${jobId}/original`);
+  const resultZiptPath = path.resolve(__dirname, `/tmp/pdf/split/${jobId}`);
   recreatePath(originalFilePath);
 
   await convertPdfToImage(fileBuffer, originalFilePath, pageName);
 
   if (pageOptions && pageOptions.split && pageOptions.split !== 'no-split') {
-    const processedFilePath = path.resolve(__dirname, `../../../uploads/pdf/split/${jobId}/processed`);
+    const processedFilePath = path.resolve(__dirname, `/tmp/pdf/split/${jobId}/processed`);
     recreatePath(processedFilePath);
 
     await subSplitPage(originalFilePath, processedFilePath, pageName, pageOptions.split);

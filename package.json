@@ -11,7 +11,8 @@
     "start:serverless": "serverless offline",
     "lint": "eslint --fix --ext .ts .",
     "test": "jest --collect-coverage",
-    "deploy": "yarn build && serverless deploy"
+    "deploy": "yarn build && serverless deploy",
+    "postinstall": "husky install"
   },
   "jest": {
     "globals": {

@@ -1,7 +1,6 @@
 import fs from 'fs';
 import rimraf from 'rimraf';
 import JSZip from 'jszip';
-import { PDFDocument } from 'pdf-lib';
 
 export const makeZipFile = async (fileName: string, sourcePath: string, targetPath: string) => {
   const zip = new JSZip();
@@ -37,12 +36,4 @@ export const createPathIfNotExist = (path: string) => {
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
   }
-};
-
-export const createPdf = async (path: string, text: string) => {
-  const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([800, 600]);
-  page.drawText(text);
-  const pdfBinary = await pdfDoc.save();
-  fs.writeFileSync(path, pdfBinary);
 };

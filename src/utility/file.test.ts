@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist, createPdf } from './fileProcess';
+import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist } from './file';
+import { createTestPdf } from './pdf';
 
 describe('FileProcess', () => {
   describe('makeZipFile', () => {
@@ -23,7 +24,7 @@ describe('FileProcess', () => {
   describe('recreatePath', () => {
     it('can recreate a directory', async () => {
       createPathIfNotExist('./src/utility/__test__/test_folder1');
-      await createPdf('./src/utility/__test__/test_folder1/test.pdf', 'test');
+      await createTestPdf('./src/utility/__test__/test_folder1/test.pdf', 'test');
       expect(fs.existsSync('./src/utility/__test__/test_folder1/test.pdf')).toBeTruthy();
       recreatePath('./src/utility/__test__/test_folder1');
       expect(fs.existsSync('./src/utility/__test__/test_folder1/test.pdf')).toBeFalsy();
@@ -35,14 +36,6 @@ describe('FileProcess', () => {
       createPathIfNotExist('./src/utility/__test__/test_folder1');
       expect(fs.existsSync('./src/utility/__test__/test_folder1')).toBeTruthy();
       deleteFolders('./src/utility/__test__/test_folder1');
-    });
-  });
-
-  describe('createPdf', () => {
-    it('can create pdf file', async () => {
-      await createPdf('./src/utility/__test__/test.pdf', 'test');
-      expect(fs.existsSync('./src/utility/__test__/test.pdf')).toBeTruthy();
-      fs.rmSync('./src/utility/__test__/test.pdf');
     });
   });
 });

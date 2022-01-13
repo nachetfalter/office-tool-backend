@@ -1,9 +1,10 @@
 import fs from 'fs';
-import jimp from 'jimp';
 import sizeOf from 'image-size';
 import { writeImageToFile, convertPdfToImage, subSplitPage, splitPdf } from './splitPdf';
+import { createTestPdf } from '../../utility/pdf';
+import { createTestImage } from '../../utility/image';
 import * as splitPdfModule from './splitPdf';
-import * as fileProcessModule from './../../utility/fileProcess';
+import * as fileUtilityModule from '../../utility/file';
 
 describe('writeImageToFile', () => {
   afterEach(() => {
@@ -11,7 +12,7 @@ describe('writeImageToFile', () => {
   });
 
   it('can save image to file and increment counter', async () => {
-    const image = new jimp(300, 530, 'green');
+    const image = await createTestImage();
     let counter = 1;
     counter = await writeImageToFile('./src/pdf/split/__test__/', 'test-page', image, counter);
     expect(fs.existsSync('./src/pdf/split/__test__/test-page.1.png')).toBeTruthy();
@@ -21,9 +22,9 @@ describe('writeImageToFile', () => {
 
 describe('subSplitPage', () => {
   beforeEach(async () => {
-    await fileProcessModule.createPdf('./src/pdf/split/__test__/test.pdf', 'test');
-    fileProcessModule.createPathIfNotExist('./src/pdf/split/__test__/original');
-    fileProcessModule.createPathIfNotExist('./src/pdf/split/__test__/processed');
+    await createTestPdf('./src/pdf/split/__test__/test.pdf', 'test');
+    fileUtilityModule.createPathIfNotExist('./src/pdf/split/__test__/original');
+    fileUtilityModule.createPathIfNotExist('./src/pdf/split/__test__/processed');
     await convertPdfToImage(
       fs.readFileSync('./src/pdf/split/__test__/test.pdf'),
       './src/pdf/split/__test__/original',
@@ -32,7 +33,7 @@ describe('subSplitPage', () => {
   });
 
   afterEach(async () => {
-    fileProcessModule.deleteFolders('./src/pdf/split/__test__/original', './src/pdf/split/__test__/processed');
+    fileUtilityModule.deleteFolders('./src/pdf/split/__test__/original', './src/pdf/split/__test__/processed');
     fs.rmSync('./src/pdf/split/__test__/test.pdf');
   });
 
@@ -74,7 +75,7 @@ describe('convertPdfToImage', () => {
   });
 
   it('can convert pdf to image', async () => {
-    await fileProcessModule.createPdf('./src/pdf/split/__test__/test.pdf', 'test');
+    await createTestPdf('./src/pdf/split/__test__/test.pdf', 'test');
     await convertPdfToImage(
       fs.readFileSync('./src/pdf/split/__test__/test.pdf'),
       './src/pdf/split/__test__/',
@@ -98,12 +99,12 @@ describe('splitPdf main function', () => {
   let mockedMakeZipFile: jest.SpyInstance<Promise<unknown>, [fileName: string, sourcePath: string, targetPath: string]>;
 
   beforeEach(async () => {
-    mockedRecreatePath = jest.spyOn(fileProcessModule, 'recreatePath').mockImplementation(jest.fn());
-    mockedDeleteFolders = jest.spyOn(fileProcessModule, 'deleteFolders').mockImplementation(jest.fn());
+    mockedRecreatePath = jest.spyOn(fileUtilityModule, 'recreatePath').mockImplementation(jest.fn());
+    mockedDeleteFolders = jest.spyOn(fileUtilityModule, 'deleteFolders').mockImplementation(jest.fn());
     mockedConvertPdfToImage = jest.spyOn(splitPdfModule, 'convertPdfToImage').mockImplementation(jest.fn());
     mockedSubSplitPage = jest.spyOn(splitPdfModule, 'subSplitPage').mockImplementation(jest.fn());
-    mockedMakeZipFile = jest.spyOn(fileProcessModule, 'makeZipFile').mockImplementation(jest.fn());
-    await fileProcessModule.createPdf('./src/pdf/split/__test__/test.pdf', 'test');
+    mockedMakeZipFile = jest.spyOn(fileUtilityModule, 'makeZipFile').mockImplementation(jest.fn());
+    await createTestPdf('./src/pdf/split/__test__/test.pdf', 'test');
   });
 
   afterEach(async () => {

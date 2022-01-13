@@ -2,7 +2,7 @@ import fs from 'fs';
 import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist } from './file';
 import { createTestPdf } from './pdf';
 
-describe('FileProcess', () => {
+describe('File', () => {
   describe('makeZipFile', () => {
     it('can make zip file from files in source path and save them to target path', async () => {
       await makeZipFile('test', './src/utility/__test__/', './src/utility/__test__/');

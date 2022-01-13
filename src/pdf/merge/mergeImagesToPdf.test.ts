@@ -16,5 +16,7 @@ describe('mergeImagesToPdf', () => {
       'test',
     );
     expect(fs.existsSync('/tmp/pdf/merge/testJob/test.pdf')).toBe(true);
+    fs.rmSync('./src/pdf/merge/__test__/testImage1.png');
+    fs.rmSync('./src/pdf/merge/__test__/testImage2.png');
   });
 });

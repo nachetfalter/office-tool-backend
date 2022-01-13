@@ -8,6 +8,12 @@ provider:
   stage: dev
   region: ap-southeast-2
   memorySize: 7168
+  apiGateway:
+    binaryMediaTypes:
+      - 'application/zip'
+      - 'application/pdf'
+      - 'application/octet-stream'
+      - 'multipart/form-data'
 custom:
   serverless-offline:
     httpPort: 8000
@@ -30,8 +36,8 @@ functions:
           method: ANY
           cors: true
     layers:
-      - arn:aws:lambda:ap-southeast-2:175033217214:layer:graphicsmagick:2
       - arn:aws:lambda:ap-southeast-2:764866452798:layer:ghostscript:9
+      - arn:aws:lambda:ap-southeast-2:175033217214:layer:graphicsmagick:2
 
 plugins:
   - serverless-offline

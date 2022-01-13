@@ -4,8 +4,8 @@ import jimp from 'jimp';
 import fs from 'fs';
 import { PDFDocument } from 'pdf-lib';
 import { PageOptions } from './splitPdf.d';
-import { getSizeAdjustedForRotation } from './../../utility/imageProcess';
-import { makeZipFile, deleteFolders, recreatePath } from './../../utility/fileProcess';
+import { getPdfSizeAdjustedForRotation } from '../../utility/pdf';
+import { makeZipFile, deleteFolders, recreatePath } from '../../utility/file';
 
 // I used any type here because the actual types of jimp image are too complicated
 export const writeImageToFile = async (
@@ -24,13 +24,13 @@ export const convertPdfToImage = async (fileBuffer: Buffer, savePath: string, pa
   console.log('Converting pdf to image');
   const pdfDoc = await PDFDocument.load(fileBuffer);
   const pages = pdfDoc.getPages();
-  const { width, height } = getSizeAdjustedForRotation(pages[0]);
+  const { width, height } = getPdfSizeAdjustedForRotation(pages[0]);
 
   const baseOptions = {
     width: width,
     height: height,
     savePath: savePath,
-    density: 600,
+    density: 700,
     saveFilename: pageName,
   };
 
@@ -42,11 +42,7 @@ export const convertPdfToImage = async (fileBuffer: Buffer, savePath: string, pa
   if (convert) {
     await Promise.all(
       pages.map(async (_, pageNumber) => {
-        // ts ignore is used here due to 'cannot invoke object which is possibly undefined
-        // this cannot be resolved no matter what for some reason
-        if (convert.bulk !== undefined) {
-          await convert.bulk(pageNumber + 1);
-        }
+        await convert(pageNumber + 1);
         console.log('can finish the convert function');
       }),
     );

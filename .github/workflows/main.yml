@@ -1,8 +1,6 @@
 name: office-tool-backend-cicd
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 

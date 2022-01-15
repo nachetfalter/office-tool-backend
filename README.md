@@ -1,7 +1,7 @@
 # Office Tool Backend
 
 ![CI/CD](https://github.com/nachetfalter/office-tool-backend/workflows/office-tool-backend-cicd/badge.svg)
-[![codecov](https://codecov.io/gh/nachetfalter/office-tool-backend/branch/master/graph/badge.svg)](https://app.codecov.io/gh/nachetfalter/office-tool-backend)
+[![codecov](https://codecov.io/gh/nachetfalter/office-tool-backend/branch/main/graph/badge.svg)](https://app.codecov.io/gh/nachetfalter/office-tool-backend)
 ![GitHub last commit](https://img.shields.io/github/last-commit/nachetfalter/office-tool-backend)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/nachetfalter/office-tool-backend)
 

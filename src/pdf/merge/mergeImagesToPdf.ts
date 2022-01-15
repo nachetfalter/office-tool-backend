@@ -11,6 +11,7 @@ export const mergeImagesToPdf = async (
 ): Promise<string> => {
   const pdfDoc = await PDFDocument.create();
   let pageCount = 0;
+  recreatePath(`/tmp/pdf/merge/${jobFolder}/`);
   await Promise.all(
     imagePaths.map(async (imagePath, imageIndex) => {
       await convertToPng(imagePath, `/tmp/pdf/merge/${jobFolder}/${imageIndex}.png`);
@@ -27,8 +28,7 @@ export const mergeImagesToPdf = async (
     }),
   );
   const pdfBinary = await pdfDoc.save();
-  recreatePath(path.resolve(__dirname, `/tmp/pdf/merge/${jobFolder}/`));
-  const resultPdfPath = path.resolve(__dirname, `/tmp/pdf/merge/${jobFolder}/${outputFileName}.pdf`);
+  const resultPdfPath = `/tmp/pdf/merge/${jobFolder}/${outputFileName}.pdf`;
   fs.writeFileSync(resultPdfPath, pdfBinary);
   return resultPdfPath;
 };

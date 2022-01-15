@@ -2,6 +2,7 @@ import request from 'supertest';
 import fs from 'fs';
 import { createTestPdf } from './utility/pdf';
 import { createTestImage } from './utility/image';
+import { recreatePath } from './utility/file';
 import * as splitPdfModule from './pdf/split/splitPdf';
 import * as mergeImagesToPdfModule from './pdf/merge/mergeImagesToPdf';
 import app from './app';
@@ -9,6 +10,7 @@ import app from './app';
 describe('App', () => {
   describe('POST /pdf/split', () => {
     it('receives call and returns 200 if everything is alright', async () => {
+      recreatePath('./src/__test__/');
       await createTestPdf('./src/__test__/test.pdf', 'test');
       jest.spyOn(splitPdfModule, 'splitPdf').mockImplementation(() => Promise.resolve('./src/__test__/test.pdf'));
       await request(app)
@@ -30,6 +32,7 @@ describe('App', () => {
     });
 
     it('receives call and returns 200 if everything is alright', async () => {
+      recreatePath('./src/__test__/');
       await createTestImage('./src/__test__/testImage1.png');
       await createTestImage('./src/__test__/testImage2.png');
       await createTestPdf('./src/__test__/test.pdf', 'test');

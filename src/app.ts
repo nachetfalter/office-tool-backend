@@ -63,5 +63,9 @@ app.post('/pdf/merge', fileMiddleware.array('files', 300), async (req: Request, 
 
 export const handler = serverless(app);
 
-app.listen(8000);
+/* istanbul ignore next */
+if (process.env.ENVIRONMENT === 'local') {
+  app.listen(8000);
+}
+
 export default app;

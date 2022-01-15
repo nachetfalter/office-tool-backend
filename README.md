@@ -15,7 +15,8 @@ This is the backend of a collection of utility tools for processing PDF and text
 
 1. `sudo apt-get install ghostscript`
 2. `sudo apt-get install graphicsmagick`
-3. `yarn && yarn start`
+3. Please make a `.env` file like `.env.example` and set `ENVIRONMENT` to 'local' if you will be running on a local environment
+4. `yarn && yarn start` (If you run on local, the server will be at `:8000`)
 
 ## Helpful Commands
 

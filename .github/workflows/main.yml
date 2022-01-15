@@ -33,7 +33,7 @@ jobs:
         run: yarn
 
       - name: Install Ghostscript and Graphicsmagick
-        run: sudo apt-get update && apt-get install ghostscript && apt-get install graphicsmagick
+        run: sudo apt-get update && sudo apt-get install ghostscript && sudo apt-get install graphicsmagick
 
       - name: Run the tests
         run: yarn test

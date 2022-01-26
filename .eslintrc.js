@@ -48,9 +48,11 @@ module.exports = {
       },
     ],
     'no-use-before-define': 'off',
+    'no-misleading-character-class': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/ban-ts-comment': 'off',
     'security/detect-non-literal-fs-filename': 'off',
+    'security/detect-object-injection': 'off',
     '@typescript-eslint/quotes': [
       'error',
       'single',

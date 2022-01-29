@@ -9,7 +9,7 @@
     "build": "tsc --project ./",
     "start": "nodemon ./src/index.ts",
     "lint": "eslint --fix --ext .ts .",
-    "test": "jest --collect-coverage",
+    "test": "jest --collect-coverage --changedSince=main",
     "deploy": "yarn build && serverless deploy",
     "postinstall": "husky install"
   },

@@ -1,41 +1,44 @@
 import fs from 'fs';
-import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist } from './file';
+import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist, checkFileType } from './file';
 import { createTestPdf } from './pdf';
+import { Readable } from 'stream';
+
+const modulePath = './src/utility/__test__';
 
 describe('File', () => {
   describe('makeZipFile', () => {
     it('can make zip file from files in source path and save them to target path', async () => {
-      await makeZipFile('test', './src/utility/__test__/', './src/utility/__test__/');
-      expect(fs.existsSync('./src/utility/__test__/test.zip')).toBeTruthy();
-      fs.rmSync('./src/utility/__test__/test.zip');
+      await makeZipFile('test', modulePath, modulePath);
+      expect(fs.existsSync(`${modulePath}/test.zip`)).toBeTruthy();
+      fs.rmSync(`${modulePath}/test.zip`);
     });
   });
 
   describe('deleteFolders', () => {
     it('can delete folders and all content under them', async () => {
-      createPathIfNotExist('./src/utility/__test__/test_folder1');
-      createPathIfNotExist('./src/utility/__test__/test_folder2');
-      deleteFolders('./src/utility/__test__/test_folder1', './src/utility/__test__/test_folder2');
-      expect(fs.existsSync('./src/utility/__test__/test_folder1')).toBeFalsy();
-      expect(fs.existsSync('./src/utility/__test__/test_folder2')).toBeFalsy();
+      createPathIfNotExist(`${modulePath}/test_folder1`);
+      createPathIfNotExist(`${modulePath}/test_folder2`);
+      deleteFolders(`${modulePath}/test_folder1`, './src/utility/__test__/test_folder2');
+      expect(fs.existsSync(`${modulePath}/test_folder1`)).toBeFalsy();
+      expect(fs.existsSync(`${modulePath}/test_folder2`)).toBeFalsy();
     });
   });
 
   describe('recreatePath', () => {
     it('can recreate a directory', async () => {
-      createPathIfNotExist('./src/utility/__test__/test_folder1');
-      await createTestPdf('./src/utility/__test__/test_folder1/test.pdf', 'test');
-      expect(fs.existsSync('./src/utility/__test__/test_folder1/test.pdf')).toBeTruthy();
-      recreatePath('./src/utility/__test__/test_folder1');
-      expect(fs.existsSync('./src/utility/__test__/test_folder1/test.pdf')).toBeFalsy();
+      createPathIfNotExist(`${modulePath}/test_folder1`);
+      await createTestPdf(`${modulePath}/test_folder1/test.pdf`, 'test');
+      expect(fs.existsSync(`${modulePath}/test_folder1/test.pdf`)).toBeTruthy();
+      recreatePath(`${modulePath}/test_folder1`);
+      expect(fs.existsSync(`${modulePath}/test_folder1/test.pdf`)).toBeFalsy();
     });
   });
 
   describe('createPathIfNotExist', () => {
     it('can create path if not exists', async () => {
-      createPathIfNotExist('./src/utility/__test__/test_folder1');
-      expect(fs.existsSync('./src/utility/__test__/test_folder1')).toBeTruthy();
-      deleteFolders('./src/utility/__test__/test_folder1');
+      createPathIfNotExist(`${modulePath}/test_folder1`);
+      expect(fs.existsSync(`${modulePath}/test_folder1`)).toBeTruthy();
+      deleteFolders(`${modulePath}/test_folder1`);
     });
   });
 });

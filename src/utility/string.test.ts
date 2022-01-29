@@ -6,12 +6,12 @@ describe('String', () => {
       expect(cleanString('aAáÁ华華яЯΩωチら観वायरस')).toBe('aAáÁ华華яЯΩωチら観वायरस');
     });
 
-    it('replaces consecutive special characters with space', () => {
-      expect(cleanString('a+b-c*')).toBe('a b c');
+    it('replaces consecutive non-reserved special characters with space', () => {
+      expect(cleanString('a+b-c*')).toBe('a b-c');
     });
 
-    it('replaces consecutive special characters with a single space', () => {
-      expect(cleanString('b-**)c')).toBe('b c');
+    it('replaces consecutive non-reserved special characters with a single space', () => {
+      expect(cleanString('b_.*)c')).toBe('b_. c');
     });
 
     it('removes trailing/leading spaces', () => {

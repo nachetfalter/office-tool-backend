@@ -53,28 +53,35 @@ app.post(
         errors: ['No file is posted'],
       });
     } else {
-      const buffer = readFileSync(req.file.path) as Buffer;
-      const fileName = cleanString(req.file.originalname.replace('.pdf', ''));
-      const encryptedFileName = req.file.filename;
-      console.log(`Entering split function with filename ${fileName} of size ${req.file.size}`);
-      const resultFilePath = await splitPdf(
-        fileName,
-        encryptedFileName,
-        buffer,
-        req.body.pageName,
-        JSON.parse(req.body.pageOptions),
-      );
-      fs.rmSync(req.file.path);
-      res
-        .header({
-          'Content-Type': 'application/octet-stream',
-          isBase64Encoded: true,
-        })
-        .status(200)
-        .send(fs.readFileSync(resultFilePath).toString('base64'));
-      const { size } = fs.statSync(resultFilePath);
-      console.log(`file size ${size}`);
-      fs.rmSync(resultFilePath.replace(`/${fileName}.zip`, ''), { recursive: true });
+      try {
+        const buffer = readFileSync(req.file.path) as Buffer;
+        const fileName = cleanString(req.file.originalname.replace('.pdf', ''));
+        const encryptedFileName = req.file.filename;
+        console.log(`Entering split function with filename ${fileName} of size ${req.file.size}`);
+        const resultFilePath = await splitPdf(
+          fileName,
+          encryptedFileName,
+          buffer,
+          req.body.pageName,
+          JSON.parse(req.body.pageOptions),
+        );
+        fs.rmSync(req.file.path);
+        res
+          .header({
+            'Content-Type': 'application/octet-stream',
+            isBase64Encoded: true,
+          })
+          .status(200)
+          .send(fs.readFileSync(resultFilePath).toString('base64'));
+        const { size } = fs.statSync(resultFilePath);
+        console.log(`file size ${size}`);
+        fs.rmSync(resultFilePath.replace(`/${fileName}.zip`, ''), { recursive: true });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          errors: ['An internal error happened'],
+        });
+      }
     }
   },
 );
@@ -96,20 +103,27 @@ app.post(
         errors: ['No file is posted'],
       });
     } else {
-      const files = req.files as Express.Multer.File[];
-      const filePaths = files.map((file) => file.path);
-      const resultFilePath = await mergeImagesToPdf(filePaths, uuid(), cleanString(req.body.outputFileName));
-      files.forEach((file) => fs.rmSync(file.path));
-      res
-        .header({
-          'Content-Type': 'application/octet-stream',
-          isBase64Encoded: true,
-        })
-        .status(200)
-        .send(fs.readFileSync(resultFilePath).toString('base64'));
-      const { size } = fs.statSync(resultFilePath);
-      console.log(`file size ${size}`);
-      fs.rmSync(resultFilePath.replace(`/${req.body.outputFileName}.pdf`, ''), { recursive: true });
+      try {
+        const files = req.files as Express.Multer.File[];
+        const filePaths = files.map((file) => file.path);
+        const resultFilePath = await mergeImagesToPdf(filePaths, uuid(), cleanString(req.body.outputFileName));
+        files.forEach((file) => fs.rmSync(file.path));
+        res
+          .header({
+            'Content-Type': 'application/octet-stream',
+            isBase64Encoded: true,
+          })
+          .status(200)
+          .send(fs.readFileSync(resultFilePath).toString('base64'));
+        const { size } = fs.statSync(resultFilePath);
+        console.log(`file size ${size}`);
+        fs.rmSync(resultFilePath.replace(`/${req.body.outputFileName}.pdf`, ''), { recursive: true });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          errors: ['An internal error happened'],
+        });
+      }
     }
   },
 );

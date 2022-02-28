@@ -1,7 +1,6 @@
 import fs from 'fs';
-import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist, checkFileType } from './file';
+import { makeZipFile, deleteFolders, recreatePath, createPathIfNotExist } from './file';
 import { createTestPdf } from './pdf';
-import { Readable } from 'stream';
 
 const modulePath = './src/utility/__test__';
 

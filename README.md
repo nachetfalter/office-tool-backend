@@ -3,7 +3,7 @@
 ![CI/CD](https://github.com/nachetfalter/office-tool-backend/workflows/office-tool-backend-cicd/badge.svg)
 [![codecov](https://codecov.io/gh/nachetfalter/office-tool-backend/branch/main/graph/badge.svg)](https://app.codecov.io/gh/nachetfalter/office-tool-backend)
 ![GitHub last commit](https://img.shields.io/github/last-commit/nachetfalter/office-tool-backend)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/nachetfalter/office-tool-backend)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/nachetfalter/office-tool-backend)
 
 ## Overview
 
@@ -20,7 +20,7 @@ This is the backend of a collection of utility tools for processing PDF and text
 
 ## Helpful Commands
 
-* `yarn test`
+* `sudo yarn test` (sudo is important for creating folders under `/tmp`)
 
 * `yarn lint` (will run coverage)
 

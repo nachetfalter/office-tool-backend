@@ -16,9 +16,7 @@ export const getImageSize = async (imageSource: string) => {
 };
 
 export const convertToPng = async (imageSource: string, savePath: string) => {
-  const absoluteImagePath = imageSource;
-
-  return jimp.read(absoluteImagePath).then((image) => {
+  return jimp.read(imageSource).then((image) => {
     return image.writeAsync(savePath);
   });
 };

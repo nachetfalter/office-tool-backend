@@ -1,6 +1,6 @@
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
-import { getPdfSizeAdjustedForRotation, createTestPdf } from './pdf';
+import { getPdfSizeAdjustedForRotation, createTestPdf, getNumberOfPages, convertPdfToImage } from './pdf';
 
 describe('pdf', () => {
   describe('getPdfSizeAdjustedForRotation', () => {
@@ -16,8 +16,28 @@ describe('pdf', () => {
   describe('createTestPdf', () => {
     it('can create pdf file', async () => {
       await createTestPdf('./src/utility/__test__/test.pdf', 'test');
-      expect(fs.existsSync('./src/utility/__test__/test.pdf')).toBeTruthy();
+      expect(fs.existsSync('./src/utility/__test__/test.pdf')).toBe(true);
       fs.rmSync('./src/utility/__test__/test.pdf');
+    });
+  });
+
+  describe('getNumberOfPages', () => {
+    it('can get number of pages from a pdf file', async () => {
+      expect(await getNumberOfPages('./src/utility/__test__/wide-page.pdf')).toBe(1);
+    });
+
+    it('throws error if an encrypted pdf is given', async () => {
+      expect(getNumberOfPages('./src/utility/__test__/encrypted.pdf')).rejects.toThrow(
+        'The document is encrypted and cannot be operated on',
+      );
+    });
+  });
+
+  describe('convertPdfToImage', () => {
+    it('can convert pdf to image', async () => {
+      await convertPdfToImage('./src/utility/__test__/wide-page.pdf', './src/utility/__test__/', 'test');
+      expect(fs.existsSync('./src/utility/__test__/test-1.png')).toBe(true);
+      fs.rmSync('./src/utility/__test__/test-1.png');
     });
   });
 });

@@ -1,3 +1,4 @@
+jest.useFakeTimers();
 import { mockReq, mockRes } from '../utility/expressTestHelper';
 import * as s3Module from '../utility/s3';
 import fs from 'fs';

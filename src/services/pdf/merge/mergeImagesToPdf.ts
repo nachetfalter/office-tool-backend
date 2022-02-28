@@ -1,8 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 import { PDFDocument } from 'pdf-lib';
-import { recreatePath } from '../../utility/file';
-import { getImageSize, convertToPng } from '../../utility/image';
+import { getImageSize, convertToPng } from '../../../utility/image';
 
 export const mergeImagesToPdf = async (
   imagePaths: string[],
@@ -11,7 +9,6 @@ export const mergeImagesToPdf = async (
 ): Promise<string> => {
   const pdfDoc = await PDFDocument.create();
   let pageCount = 0;
-  recreatePath(`/tmp/pdf/merge/${jobFolder}/`);
   await Promise.all(
     imagePaths.map(async (imagePath, imageIndex) => {
       await convertToPng(imagePath, `/tmp/pdf/merge/${jobFolder}/${imageIndex}.png`);

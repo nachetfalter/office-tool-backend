@@ -23,8 +23,9 @@ provider:
       - 'application/octet-stream'
       - 'multipart/form-data'
   environment:
-    S3_BUCKET: office-tool-file-upload
+    S3_BUCKET: ${env:S3_BUCKET}
     MAGICK_TMPDIR: /mnt/storage
+    STORAGE_DIRECTORY: /mnt/storage
   iam:
     role:
       name: office-tool-lambda

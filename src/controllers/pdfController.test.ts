@@ -45,7 +45,7 @@ describe('pdfController', () => {
       await pdfSplitController(mockedReq, mockedRes);
       expect(mockedDownloadFile).toBeCalledWith(
         '00cf297a-dcd7-44f3-8bf8-3891144472d5.pdf',
-        '/mnt/storage/pdf/split/00cf297a-dcd7-44f3-8bf8-3891144472d5/00cf297a-dcd7-44f3-8bf8-3891144472d5.pdf',
+        `${process.env.STORAGE_DIRECTORY}/pdf/split/00cf297a-dcd7-44f3-8bf8-3891144472d5/00cf297a-dcd7-44f3-8bf8-3891144472d5.pdf`,
       );
       expect(mockedSplitPdfToImages).toBeCalledWith('00cf297a-dcd7-44f3-8bf8-3891144472d5', 'page', {
         split: 'no-split',
@@ -112,11 +112,13 @@ describe('pdfController', () => {
       await pdfMergeController(mockedReq, mockedRes);
       expect(mockedDownloadFile).toBeCalledWith(
         '00cf297a-dcd7-44f3-8bf8-3891144472d5.png',
-        '/mnt/storage/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114/00cf297a-dcd7-44f3-8bf8-3891144472d5.png',
+        `${process.env.STORAGE_DIRECTORY}/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114/00cf297a-dcd7-44f3-8bf8-3891144472d5.png`,
       );
       expect(mockedMergeImagesToPdf).toBeCalledWith(
-        ['/mnt/storage/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114/00cf297a-dcd7-44f3-8bf8-3891144472d5.png'],
-        '/mnt/storage/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114',
+        [
+          `${process.env.STORAGE_DIRECTORY}/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114/00cf297a-dcd7-44f3-8bf8-3891144472d5.png`,
+        ],
+        `${process.env.STORAGE_DIRECTORY}/pdf/merge/b2d57020-8fa4-4823-9d00-b9fbf8caf114`,
         'testFile',
       );
       expect(mockedReadFileSync).toBeCalledWith('testFolder/testFile.pdf');

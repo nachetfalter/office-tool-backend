@@ -9,8 +9,8 @@ import { downloadFile, deleteFile } from '../utility/s3';
 import { createPathIfNotExist } from '../utility/file';
 import { makeGenericController } from '../utility/controller';
 
-createPathIfNotExist('/mnt/storage/pdf/split');
-createPathIfNotExist('/mnt/storage/pdf/merge');
+createPathIfNotExist(`${process.env.STORAGE_DIRECTORY}/pdf/split`);
+createPathIfNotExist(`${process.env.STORAGE_DIRECTORY}/pdf/merge`);
 
 export const pdfSplitController = async (req: Request, res: Response) => {
   await makeGenericController(req, res, async (req, res) => {
@@ -18,13 +18,13 @@ export const pdfSplitController = async (req: Request, res: Response) => {
       console.log('start pdf split operation');
       const s3FileName = req.body.fileName;
       const s3FileId = s3FileName.replace('.pdf', '');
-      getFolderSize('/mnt/storage/pdf', (_, size) => {
+      getFolderSize(`${process.env.STORAGE_DIRECTORY}/pdf`, (_, size) => {
         console.log({ 'EFS directory size before processing ': size });
       });
 
       const fileDownloadedSuccessfully = await downloadFile(
         s3FileName,
-        `/mnt/storage/pdf/split/${s3FileId}/${s3FileName}`,
+        `${process.env.STORAGE_DIRECTORY}/pdf/split/${s3FileId}/${s3FileName}`,
       );
 
       if (fileDownloadedSuccessfully) {
@@ -40,7 +40,7 @@ export const pdfSplitController = async (req: Request, res: Response) => {
           .send(outputFileContentInBase64);
         fs.rmSync(outputFilePath.replace(`/${s3FileId}.zip`, ''), { recursive: true });
         await deleteFile(s3FileName);
-        getFolderSize('/mnt/storage/pdf', (_, size) => {
+        getFolderSize(`${process.env.STORAGE_DIRECTORY}/pdf`, (_, size) => {
           console.log({ 'EFS directory size after processing': size });
         });
       } else {
@@ -76,10 +76,10 @@ export const pdfMergeController = async (req: Request, res: Response) => {
       for (const s3FileName of s3FileNames) {
         const fileDownloadedSuccessfully = await downloadFile(
           s3FileName,
-          `/mnt/storage/pdf/merge/${jobId}/${s3FileName}`,
+          `${process.env.STORAGE_DIRECTORY}/pdf/merge/${jobId}/${s3FileName}`,
         );
         if (fileDownloadedSuccessfully) {
-          filePaths.push(`/mnt/storage/pdf/merge/${jobId}/${s3FileName}`);
+          filePaths.push(`${process.env.STORAGE_DIRECTORY}/pdf/merge/${jobId}/${s3FileName}`);
         } else {
           console.log('S3 file download failed in pdfMergeController');
           res.status(500).json({
@@ -92,7 +92,7 @@ export const pdfMergeController = async (req: Request, res: Response) => {
       const cleanedOutputFileName = cleanString(req.body.outputFileName);
       const outputFilePath = await mergeImagesToPdf(
         filePaths,
-        `/mnt/storage/pdf/merge/${jobId}`,
+        `${process.env.STORAGE_DIRECTORY}/pdf/merge/${jobId}`,
         cleanedOutputFileName,
       );
       const outputFileContentInBase64 = fs.readFileSync(outputFilePath).toString('base64');

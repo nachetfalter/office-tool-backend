@@ -8,6 +8,17 @@ import * as splitPdfModule from './splitPdfToImages';
 import * as fileUtilityModule from '../../../utility/file';
 
 describe('writeImageToFile', () => {
+  let originalStorageDirectory: string;
+  beforeAll(() => {
+    originalStorageDirectory = process.env.STORAGE_DIRECTORY ?? '';
+    process.env.STORAGE_DIRECTORY = './__test__';
+  });
+
+  afterAll(() => {
+    process.env.STORAGE_DIRECTORY = originalStorageDirectory;
+    fileUtilityModule.deleteFolders('./__test__');
+  });
+
   afterEach(() => {
     fs.rmSync('./src/services/pdf/split/__test__/test-page.1.png');
   });
@@ -98,8 +109,8 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original`,
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d`,
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).not.toBeCalled();
@@ -113,13 +124,13 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed`,
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d`,
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).toBeCalledWith(
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original`,
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed`,
       'test-page',
       'horizontal',
     );
@@ -133,13 +144,13 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed`,
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d`,
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).toBeCalledWith(
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original`,
+      `${process.env.STORAGE_DIRECTORY}/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed`,
       'test-page',
       'vertical',
     );

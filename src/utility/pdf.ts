@@ -23,7 +23,7 @@ export const loadPdf = async (source: string) => {
   try {
     pdfDoc = await PDFDocument.load(fs.readFileSync(source));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw Error('The document is encrypted and cannot be operated on');
   }
   return pdfDoc;
@@ -40,25 +40,37 @@ export const convertPdfToImage = async (
   outputPageName: string,
 ): Promise<void> => {
   const pdfPages = (await loadPdf(source)).getPages();
-  await Promise.all(
-    pdfPages.map(async (page, pageNumber) => {
-      const { width, height } = getPdfSizeAdjustedForRotation(page);
-      return new Promise((resolve, reject) => {
+  let batch = [];
+  for (const page of pdfPages) {
+    // Unfortunately it would seem that Ghostscript has problem
+    // converting if all jobs are allowed to go concurrently
+    if (batch.length === 50) {
+      await Promise.all(batch);
+      batch = [];
+    }
+    const pageNumber = pdfPages.indexOf(page);
+    const { width, height } = getPdfSizeAdjustedForRotation(page);
+    batch.push(
+      new Promise((resolve, reject) => {
         gm(`${source}[${pageNumber}]`)
           .setFormat('png')
           .resize(width, height)
           .quality(100)
           .density(400, 400)
-          .stream()
-          .pipe(fs.createWriteStream(`${destDirectory}/${outputPageName}-${pageNumber + 1}.png`))
-          .on('error', (err) => {
-            console.log(err);
-            return reject(false);
-          })
-          .on('finish', () => {
+          .write(`${destDirectory}/${outputPageName}-${pageNumber + 1}.png`, (err) => {
+            if (err) {
+              console.error(err);
+              return reject(false);
+            }
+            console.log(`${destDirectory}/${outputPageName}-${pageNumber + 1}.png finished`);
+            const { size } = fs.statSync(`${destDirectory}/${outputPageName}-${pageNumber + 1}.png`);
+            console.log(`File ${destDirectory}/${outputPageName}-${pageNumber + 1}.png has ${size}`);
             return resolve(true);
           });
-      });
-    }),
-  );
+      }),
+    );
+  }
+  if (batch.length) {
+    await Promise.all(batch);
+  }
 };

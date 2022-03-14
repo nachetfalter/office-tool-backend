@@ -23,7 +23,9 @@ export const makeZipFile = async (fileName: string, sourcePath: string, targetPa
 
 export const deleteFolders = (...filePaths: string[]) => {
   for (const filePath of filePaths) {
-    fs.rmSync(filePath, { recursive: true });
+    if (fs.existsSync(filePath)) {
+      fs.rmSync(filePath, { recursive: true });
+    }
   }
 };
 

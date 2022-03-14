@@ -4,7 +4,9 @@ import { createTestImage } from '../../../utility/image';
 
 describe('mergeImagesToPdf', () => {
   afterEach(() => {
-    fs.rmSync('/tmp/pdf/merge/testJob/test.pdf');
+    if (fs.existsSync('/mnt/storage/pdf/merge/testJob/test.pdf')) {
+      fs.rmSync('/mnt/storage/pdf/merge/testJob/test.pdf');
+    }
   });
 
   it('can merge images to pdf and return the path to the pdf file', async () => {
@@ -15,7 +17,7 @@ describe('mergeImagesToPdf', () => {
       'testJob',
       'test',
     );
-    expect(fs.existsSync('/tmp/pdf/merge/testJob/test.pdf')).toBe(true);
+    expect(fs.existsSync('/mnt/storage/pdf/merge/testJob/test.pdf')).toBe(true);
     fs.rmSync('./src/services/pdf/merge/__test__/testImage1.png');
     fs.rmSync('./src/services/pdf/merge/__test__/testImage2.png');
   }, 10000);

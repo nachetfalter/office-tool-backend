@@ -52,3 +52,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACTION_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ACTION_AWS_SECRET_ACCESS_KEY }}
           CI: ''
+          EFS_ARN: ${{ secrets.EFS_ARN }}
+          VPC_SECURITY_GROUP: ${{ secrets.VPC_SECURITY_GROUP }}
+          VPC_SUBNET_ID: ${{ secrets.VPC_SUBNET_ID }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          S3_RESOURCE: ${{ secrets.S3_RESOURCE }}

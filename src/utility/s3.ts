@@ -6,12 +6,7 @@ import { createPathIfNotExist } from './file';
 
 /* istanbul ignore next */
 const validateEnvVariables = () => {
-  if (
-    !process.env.AWS_ACCESS_KEY ||
-    !process.env.AWS_SECRET_ACCESS_KEY ||
-    !process.env.AWS_REGION ||
-    !process.env.S3_BUCKET
-  ) {
+  if (!process.env.ACCESS_KEY || !process.env.SECRET_ACCESS_KEY || !process.env.AWS_REGION || !process.env.S3_BUCKET) {
     throw new Error('AWS credentials, region and/or s3 bucket are not properly defined in .env');
   }
 };
@@ -23,8 +18,8 @@ const getS3Client = () => {
   return new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY as string,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+      accessKeyId: process.env.ACCESS_KEY as string,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY as string,
     },
   });
 };
@@ -36,7 +31,8 @@ export const getS3FileStream = async (fileName: string): Promise<Readable | null
     Bucket: process.env.S3_BUCKET,
     Key: fileName as string,
   });
-  return (await client.send(command))?.Body as Readable;
+  const commandResult = await client.send(command);
+  return commandResult.Body as Readable;
 };
 
 /* istanbul ignore next */
@@ -53,15 +49,14 @@ export const createUploadUrl = async (fileName: string) => {
 export const downloadFile = async (s3FileName: string, savePath: string): Promise<boolean> => {
   const fileStream = await getS3FileStream(s3FileName);
   if (!fileStream) return false;
-
   const fileParentPath = savePath.replace(/\/.{36,36}\..*$/, '');
   createPathIfNotExist(fileParentPath);
+  const target = fs.createWriteStream(savePath);
   return new Promise((resolve, reject) => {
     fileStream
-      .pipe(fs.createWriteStream(savePath))
+      .pipe(target)
       .on('error', (err) => {
-        console.log(err);
-        console.log('File retrieval from s3 failed');
+        console.error('File retrieval from s3 failed', err);
         return reject(false);
       })
       .on('finish', () => resolve(true));
@@ -75,5 +70,5 @@ export const deleteFile = async (fileName: string) => {
     Bucket: process.env.S3_BUCKET,
     Key: fileName as string,
   });
-  return await client.send(command);
+  return client.send(command);
 };

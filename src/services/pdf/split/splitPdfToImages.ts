@@ -46,7 +46,6 @@ export const subSplitPage = async (
         const rightHalf = image.clone();
         leftHalf.crop(0, 0, width / 2, height);
         rightHalf.crop(width / 2, 0, width / 2 - 4, height);
-        console.log(parentPageIndex);
         return Promise.all([
           writeImageToFile(processedImagePath, pageName, leftHalf, 2 * parentPageIndex + 1),
           writeImageToFile(processedImagePath, pageName, rightHalf, 2 * parentPageIndex + 2),
@@ -58,16 +57,16 @@ export const subSplitPage = async (
 
 export const splitPdfToImages = async (fileId: string, pageName: string, pageOptions: PageOptions) => {
   console.log(`Entered split pdf function`);
-  const unprocessedImagePath = path.resolve(__dirname, `/tmp/pdf/split/${fileId}/original`);
-  const resultZiptPath = path.resolve(__dirname, `/tmp/pdf/split/${fileId}`);
-  const sourcePath = `/tmp/pdf/split/${fileId}/${fileId}.pdf`;
+  const unprocessedImagePath = path.resolve(__dirname, `/mnt/storage/pdf/split/${fileId}/original`);
+  const resultZiptPath = path.resolve(__dirname, `/mnt/storage/pdf/split/${fileId}`);
+  const sourcePath = `/mnt/storage/pdf/split/${fileId}/${fileId}.pdf`;
   recreatePath(unprocessedImagePath);
 
   await convertPdfToImage(sourcePath, unprocessedImagePath, pageName);
   const pageNeedsSplitting = pageOptions && pageOptions.split && pageOptions.split !== 'no-split';
 
   if (pageNeedsSplitting) {
-    const processedImagePath = path.resolve(__dirname, `/tmp/pdf/split/${fileId}/processed`);
+    const processedImagePath = path.resolve(__dirname, `/mnt/storage/pdf/split/${fileId}/processed`);
     recreatePath(processedImagePath);
 
     await subSplitPage(unprocessedImagePath, processedImagePath, pageName, pageOptions.split);

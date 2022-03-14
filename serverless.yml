@@ -2,9 +2,17 @@ org: nachetfalter
 app: office-tool-backend
 service: office-tool-backend
 
+custom:
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 2
+
+
 provider:
   name: aws
   runtime: nodejs14.x
+  timeout: 120
   stage: dev
   region: ap-southeast-2
   memorySize: 7168
@@ -14,12 +22,22 @@ provider:
       - 'application/pdf'
       - 'application/octet-stream'
       - 'multipart/form-data'
-
-custom:
-  prune:
-    automatic: true
-    includeLayers: true
-    number: 2
+  environment:
+    S3_BUCKET: office-tool-file-upload
+    MAGICK_TMPDIR: /mnt/storage
+  iam:
+    role:
+      name: office-tool-lambda
+      statements:
+        - Effect: 'Allow'
+          Resource: ${env:S3_RESOURCE}
+          Action:
+            - s3:CreateBucket
+            - s3:DeleteBucket
+            - s3:ListBucket
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
 
 functions:
   backend:
@@ -28,21 +46,30 @@ functions:
       - http:
           path: /pdf/split
           method: POST
-          cors: true
+          cors: false
       - http:
           path: /pdf/merge
           method: POST
-          cors: true
+          cors: false
       - http:
           path: /uploadUrl
           method: GET
-          cors: true
+          cors: false
       - http:
           path: /{proxy+}
           method: ANY
-          cors: true
+          cors: false
     layers:
+      - arn:aws:lambda:ap-southeast-2:764866452798:layer:ghostscript:9
       - arn:aws:lambda:ap-southeast-2:175033217214:layer:graphicsmagick:2
+    fileSystemConfig:
+      localMountPath: /mnt/storage
+      arn: ${env:EFS_ARN}
+    vpc:
+      securityGroupIds:
+        - ${env:VPC_SECURITY_GROUP}
+      subnetIds:
+        - ${env:VPC_SUBNET_ID}
 
 plugins:
   - serverless-prune-plugin

@@ -20,8 +20,8 @@ This is the backend of a collection of utility tools for processing PDF and text
 
 ## Helpful Commands
 
-* `sudo yarn test` (sudo is important for creating folders under `/tmp`)
+* `sudo yarn test` (sudo is important for creating folders under `/mnt/storage`)
 
 * `yarn lint` (will run coverage)
 
-* `yarn deploy` (require Serverless and AWS setup)
+* `yarn deploy` (require Serverless and AWS setup, for AWS setup you need to setup your own EFS, S3 and VPC endpoint to S3)

@@ -27,8 +27,9 @@ describe('s3', () => {
       const readable = Readable.from(fs.readFileSync('src/utility/__test__/wide-page.pdf'));
       jest.spyOn(s3Module, 'getS3FileStream').mockResolvedValue(readable);
 
-      // deliberately use a wrong path
+      // deliberately using a wrong file name which would be made into folder instead of actual path
       await expect(downloadFile('test.pdf', 'nonExistPath/test.pdf')).rejects.toBe(false);
+      fs.rmSync('nonExistPath', { recursive: true });
     });
   });
 });

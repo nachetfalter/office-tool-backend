@@ -98,8 +98,8 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).not.toBeCalled();
@@ -113,13 +113,13 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).toBeCalledWith(
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
       'test-page',
       'horizontal',
     );
@@ -133,13 +133,13 @@ describe('splitPdf main function', () => {
     expect(mockedConvertPdfToImage).toBeCalledTimes(1);
     expect(mockedMakeZipFile).toBeCalledWith(
       '754315fb-4183-4ba8-960a-a0cb80d4fd5d',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d',
     );
     expect(mockedDeleteFolders).toBeCalledTimes(1);
     expect(mockedSubSplitPage).toBeCalledWith(
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
-      '/tmp/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/original',
+      '/mnt/storage/pdf/split/754315fb-4183-4ba8-960a-a0cb80d4fd5d/processed',
       'test-page',
       'vertical',
     );

@@ -11,8 +11,8 @@ export const mergeImagesToPdf = async (
   let pageCount = 0;
   await Promise.all(
     imagePaths.map(async (imagePath, imageIndex) => {
-      await convertToPng(imagePath, `/tmp/pdf/merge/${jobFolder}/${imageIndex}.png`);
-      const image = await pdfDoc.embedPng(fs.readFileSync(`/tmp/pdf/merge/${jobFolder}/${imageIndex}.png`));
+      await convertToPng(imagePath, `/mnt/storage/pdf/merge/${jobFolder}/${imageIndex}.png`);
+      const image = await pdfDoc.embedPng(fs.readFileSync(`/mnt/storage/pdf/merge/${jobFolder}/${imageIndex}.png`));
       const { width, height } = await getImageSize(imagePath);
       const page = pdfDoc.insertPage(pageCount, [width, height]);
       pageCount += 1;
@@ -25,7 +25,7 @@ export const mergeImagesToPdf = async (
     }),
   );
   const pdfBinary = await pdfDoc.save();
-  const resultPdfPath = `/tmp/pdf/merge/${jobFolder}/${outputFileName}.pdf`;
+  const resultPdfPath = `/mnt/storage/pdf/merge/${jobFolder}/${outputFileName}.pdf`;
   fs.writeFileSync(resultPdfPath, pdfBinary);
   return resultPdfPath;
 };
